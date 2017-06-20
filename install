@@ -8,6 +8,11 @@ if (( $EUID != 0 )); then
 fi
 KERNEL=${1-$(uname -r)}
 make KERNEL=$KERNEL
+# sign modules
+/usr/src/linux/scripts/sign-file sha512 /usr/src/linux/certs/signing_key.pem /usr/src/linux/certs/signing_key.x509 rt2x00/mt7630e.ko
+/usr/src/linux/scripts/sign-file sha512 /usr/src/linux/certs/signing_key.pem /usr/src/linux/certs/signing_key.x509 btloader/mt76xx.ko
+# make directory
+mkdir -p /lib/modules/${KERNEL}/kernel/drivers/net/wireless/
 make install KERNEL=$KERNEL
 modprobe mt7630e -S $KERNEL
 modprobe mt76xx -S $KERNEL
